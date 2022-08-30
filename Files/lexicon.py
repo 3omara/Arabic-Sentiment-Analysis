@@ -19,7 +19,6 @@ import re
 
 
 lexicon = pd.read_excel("Files\\NileULex_v0.27.xlsx")
-lexicon = lexicon.drop(lexicon.index[[range(0, 9)]])
 lexicon.drop(lexicon.columns[2:], axis=1, inplace=True)
 lexicon.columns = ['term', 'polarity']
 # lexicon
@@ -87,7 +86,7 @@ def unigram_tweet(tweet):
 def calc_lexicon(tweet):
     pos = 0
     comp_pos = 0
-    neg = 0 
+    neg = 0
     comp_neg = 0
     word_count = 0
     token = nltk.word_tokenize(tweet.strip())
