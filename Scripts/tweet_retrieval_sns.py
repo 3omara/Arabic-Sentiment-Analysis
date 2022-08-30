@@ -4,17 +4,17 @@ import snscrape.modules.twitter as sntwitter
 import datetime
 
 
-for i in range(1):
+for i in range(5):
 
     print("Iteration No.: " + str(i) + "\n")
     tweets_df = pd.DataFrame(columns=['user_name','user_location','text','likes', 'date'])
 
     try:
-        tweets_df = pd.read_csv('tweets_sns.csv')
+        tweets_df = pd.read_csv('../Datasets/tweets_sns2.csv')
     except:
         pass
 
-    regions_df = pd.read_csv('regions_sns.csv')
+    regions_df = pd.read_csv('../Datasets/regions_sns.csv')
     
     my_api_key = "Mo8qVCy7ItfRJgVBNtyCWAMb2"
     my_api_secret = "vL4KWpZGfQ0eUi4XbEAHInVLRXSE66M8hnqpxDehyAVe87P4fe"
@@ -22,7 +22,7 @@ for i in range(1):
     auth = tw.OAuthHandler(my_api_key, my_api_secret)
     api = tw.API(auth, wait_on_rate_limit=True)
 
-    search_query = "Vodafone OR Orange OR Etisalat OR WE OR فودافون OR موبينيل OR اتصالات"
+    search_query = "Vodafone OR Orange OR Etisalat OR فودافون OR موبينيل OR اتصالات OR إتصالات OR اورانج OR أورانج"
 
     if 'date' not in regions_df.columns:
         regions_df['date'] = str(datetime.datetime.now())[:10]
@@ -83,7 +83,9 @@ for i in range(1):
         if tweet_count==0:
             print("No more tweets to retrieve in this region")
             continue
+        
+        regions_df.at[regions_df[regions_df['name']==region].index[0], 'date'] = tweets_df.iloc[-1, date_ind]
 
-        tweets_df.to_csv('tweets_sns.csv', index=False)
-        regions_df.to_csv('regions_sns.csv', index=False)
+        tweets_df.to_csv('../Datasets/tweets_sns2.csv', index=False)
+        regions_df.to_csv('../Datasets/regions_sns.csv', index=False)
         print(str(tweet_count)+" tweets from " + region + " have been retrieved successfully\n")
