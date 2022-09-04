@@ -4,7 +4,7 @@ import snscrape.modules.twitter as sntwitter
 import datetime
 
 
-for i in range(5):
+for i in range(3):
 
     print("Iteration No.: " + str(i) + "\n")
     tweets_df = pd.DataFrame(columns=['user_name','user_location','text','likes', 'date'])
@@ -15,9 +15,9 @@ for i in range(5):
         pass
 
     regions_df = pd.read_csv('../Datasets/regions_sns.csv')
-    
-    my_api_key = "Mo8qVCy7ItfRJgVBNtyCWAMb2"
-    my_api_secret = "vL4KWpZGfQ0eUi4XbEAHInVLRXSE66M8hnqpxDehyAVe87P4fe"
+        
+    my_api_key = ""
+    my_api_secret = ""
 
     auth = tw.OAuthHandler(my_api_key, my_api_secret)
     api = tw.API(auth, wait_on_rate_limit=True)
@@ -34,14 +34,11 @@ for i in range(5):
     longitude_ind = regions_df.columns.get_loc("longitude")
     radius_ind = regions_df.columns.get_loc("radius")
     date_ind = regions_df.columns.get_loc("date")
+    tweet_date_ind = tweets_df.columns.get_loc("date")
 
     for ind, region in enumerate(regions_df['name'].unique()):
         
         print(region + ":")
-
-        if regions_df.iloc[ind, date_ind] < max_date:
-            print("limit reached for this region")
-            continue
 
         latitude = regions_df.iloc[ind, latitude_ind]
         longitude = regions_df.iloc[ind, longitude_ind]
@@ -53,10 +50,14 @@ for i in range(5):
         tweet_count = 0
 
         for i,tweet in enumerate(sntwitter.TwitterSearchScraper(\
-            'q:{} until:{} geocode:{} lang:ar -filter:links -filter:replies -filter:retweets'.\
+            'q:{} until:{} geocode:{} lang:ar -filter:replies -filter:retweets'.\
             format(search_query, last_date, geocode)).get_items()):
 
             if i >= max_tweets :
+                break
+
+            if str(tweet.date)[0:10] < max_date:
+                print("limit reached for this region")
                 break
 
             full_text = tweet.content
@@ -72,7 +73,7 @@ for i in range(5):
                 'user_location': region,
                 'text': full_text,
                 'likes': tweet.likeCount,
-                'date': str(tweet.date)[0:10]
+                'date': str(tweet.date)[0:10],
             }
 
             row2df = pd.DataFrame.from_records([row])
@@ -84,7 +85,7 @@ for i in range(5):
             print("No more tweets to retrieve in this region")
             continue
         
-        regions_df.at[regions_df[regions_df['name']==region].index[0], 'date'] = tweets_df.iloc[-1, date_ind]
+        regions_df.at[regions_df[regions_df['name']==region].index[0], 'date'] = tweets_df.iloc[-1, tweet_date_ind]
 
         tweets_df.to_csv('../Datasets/tweets_sns2.csv', index=False)
         regions_df.to_csv('../Datasets/regions_sns.csv', index=False)
