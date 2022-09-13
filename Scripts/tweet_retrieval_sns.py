@@ -28,7 +28,7 @@ for i in range(3):
         regions_df['date'] = str(datetime.datetime.now())[:10]
 
     max_tweets = 100
-    max_date  = "2022-01-01"
+    max_date  = "2020-01-01"
 
     latitude_ind = regions_df.columns.get_loc("latitude")
     longitude_ind = regions_df.columns.get_loc("longitude")
