@@ -14,6 +14,12 @@ import nltk
 nltk.download('punkt')
 import ArStemmerLib as lib
 
+def remove_eng_and_nums(tweet):
+    pattern = '[a-zA-Z0-9\u0660-\u0669]'
+    
+    tweet = re.sub(pattern, "", tweet)
+    return tweet
+
 def remove_links(tweet):
     tweet = tweet.strip()
     tweet = u"%s" %tweet
@@ -144,7 +150,7 @@ def stem_docs(tweet):
     curr = curr.strip()
     return  curr
 
-def preProcess(df):
+def preProcess(df): 
     df['tweet'] = df.tweet.map(lambda tweet : stem_docs(tweet))
     df['tweet'] = df.tweet.map(lambda tweet : remove_longation(tweet))
     df['tweet'] = df.tweet.map(lambda tweet : remove_stop_words(tweet))
@@ -157,3 +163,4 @@ def preProcess(df):
     df['tweet'] = df.tweet.map(lambda tweet : remove_extrass(tweet))
     df['tweet'] = df.tweet.map(lambda tweet : remove_tag_persons(tweet))
     df['tweet'] = df.tweet.map(lambda tweet : remove_dots(tweet))
+    df['tweet'] = df.tweet.map(lambda tweet : remove_eng_and_nums(tweet))
