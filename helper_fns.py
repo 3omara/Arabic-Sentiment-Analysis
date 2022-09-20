@@ -7,7 +7,7 @@ sys.path.append('./Datasets')
 from nltk.corpus import stopwords
 import nltk
 
-import scipy.sparse
+import json
 from scipy.sparse import csr_matrix
 from scipy.sparse import hstack
 
@@ -34,5 +34,15 @@ def lexicon_calculate(X):
     train_feature_matrix = hstack((count_vectorize(X), tweet_lex_train_sparse))
 
     return train_feature_matrix
+
+def write_dict(path, dict):
+    with open(path, 'w') as convert_file:
+        convert_file.write(json.dumps(dict))
+
+def read_dict(path):
+    with open(path) as f:
+        data = f.read()
+    return json.loads(data)
+
 
 
