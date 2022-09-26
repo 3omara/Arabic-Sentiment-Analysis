@@ -99,7 +99,7 @@ def calc_lexicon(tweet):
     for i in range(0, 6):
         for lex in lexicongrams[i]:
             if lex[0] in multigrams[i]:
-                word_count = multigrams[i].count(lex[0])
+                word_count = i+1
                 if lex[1] == 'negative':
                     neg += word_count
                 elif lex[1] == 'compound_neg':
@@ -115,12 +115,21 @@ def calc_lexicon(tweet):
     return lexical_calculations
 
 
-# # Testing the method
-
-# In[57]:
-
-
-#text = 'يؤتمن ابقي قابلني يا ابن الاحبي اتكسف علي دمك '
-#text = ' اختلاس احتلال'
-text = 'فينو اهبل اهبل'
-calc_lexicon(text)
+def replace_lexicon(tweet):
+    token = nltk.word_tokenize(tweet.strip())
+    multigrams = [unigram_tweet(tweet), ngrams(token, 2), ngrams(token, 3), ngrams(
+        token, 4), ngrams(token, 5), ngrams(token, 6), ngrams(token, 7)]
+    lexicongrams = [lexicon_unigram, lexicon_bigram, lexicon_trigram,
+                    lexicon_fougram, lexicon_fivegram, lexicon_sixgram, lexicon_sevengram]
+    for i in range(0, 6):
+        for lex in lexicongrams[i]:
+            if lex[0] in multigrams[i]:
+                if lex[1] == 'negative':
+                    tweet = re.sub(" ".join(lex[0]), "سالب", tweet)
+                elif lex[1] == 'compound_neg':
+                    tweet = re.sub(" ".join(lex[0]), "سالبمركب", tweet)
+                elif lex[1] == 'compound_pos':
+                    tweet = re.sub(" ".join(lex[0]), "ايجابي", tweet)
+                elif lex[1] == 'positive':
+                    tweet = re.sub(" ".join(lex[0]), "ايجابيمركب", tweet)
+    return tweet

@@ -14,8 +14,8 @@ for i in range(10):
     regions_df = pd.read_csv('regions.csv')
     regions_df.drop(regions_df.columns[[0]], axis=1,inplace=True)
     print(regions_df.columns)
-    my_api_key = "Mo8qVCy7ItfRJgVBNtyCWAMb2"
-    my_api_secret = "vL4KWpZGfQ0eUi4XbEAHInVLRXSE66M8hnqpxDehyAVe87P4fe"
+    my_api_key = ""
+    my_api_secret = ""
 
     auth = tw.OAuthHandler(my_api_key, my_api_secret)
     api = tw.API(auth, wait_on_rate_limit=True)
