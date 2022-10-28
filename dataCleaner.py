@@ -125,21 +125,18 @@ def remove_longation(tweet):
         tweet = re.sub(f"{char}+", char, tweet)
     return tweet
 
-#remove longation
-# def remove_longation(text):
-#     text = text.strip()
-#     text = u"%s" %text
-#     p_longation = re.compile(r'(.)\1+')
-#     subst = r"\1\1"
-#     text = re.sub(p_longation, subst, text)
-#     text = text.replace('وو', 'و')
-#     text = text.replace('يي', 'ي')
-#     text = text.replace('اا', 'ا')
-#     return(text)
-
 def replace_punctuation(tweet):
-    tweet = re.sub("[?؟]", " استفهام ", tweet)
-    tweet = re.sub("!", " استعجاب ", tweet)
+    tweet = re.sub("(\?+|\؟+)", " استفهام ", tweet)
+    tweet = re.sub("!+", " استعجاب ", tweet)
+    return tweet.strip()
+
+def concat_punctuation(tweet):
+    if re.match(r'(?=.*(\؟+|\?+))',tweet ):
+        tweet=tweet+"استفهام "
+
+    if re.match(r'(?=.*(\!+))',tweet ):
+        tweet=tweet+"استعجاب "
+
     return tweet.strip()
 
 #cleaning the string
@@ -203,19 +200,3 @@ def stem_docs(tweet):
         curr = curr + stemmer.stem(word) +" "
     curr = curr.strip()
     return  curr
-
-
-# def preProcess(df): 
-#     df['tweet'] = df.tweet.map(lambda tweet : stem_docs(tweet))
-#     df['tweet'] = df.tweet.map(lambda tweet : remove_longation(tweet))
-#     df['tweet'] = df.tweet.map(lambda tweet : remove_stop_words(tweet))
-#     df['tweet'] = df.tweet.map(lambda tweet : remove_links(tweet))
-#     df['tweet'] = df.tweet.map(lambda tweet : remove_amp(tweet))
-#     df['tweet'] = df.tweet.map(lambda tweet : remove_hash(tweet))
-#     df["tweet"]= df.tweet.map(lambda tweet : re.sub(r"_", " ", tweet))
-#     df['tweet'] = df.tweet.map(lambda tweet : clean_str(tweet))
-#     df['tweet'] = df.tweet.map(lambda tweet : remove_prt(tweet))
-#     df['tweet'] = df.tweet.map(lambda tweet : remove_extrass(tweet))
-#     df['tweet'] = df.tweet.map(lambda tweet : remove_tag_persons(tweet))
-#     df['tweet'] = df.tweet.map(lambda tweet : remove_dots(tweet))
-#     df['tweet'] = df.tweet.map(lambda tweet : remove_eng_and_nums(tweet))
